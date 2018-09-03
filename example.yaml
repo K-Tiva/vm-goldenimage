@@ -1,0 +1,22 @@
+---
+- hosts: all
+  tasks:
+  - name: Install httpd package
+    yum:
+      name: httpd
+      state: present
+
+  - name: Set hostname
+    hostname:
+      name: 'Test{{ NUM }}'
+
+  - name: Edit 'ServerName' in /etc/httpd/conf/httpd.conf
+    blockinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^#ServerName'
+      line: 'ServerName Test{{ NUM }}'
+
+  - name: Enable service httpd
+    systemd:
+      name: httpd
+      enabled: yes
